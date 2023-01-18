@@ -52,6 +52,21 @@ double Building::getNetCost()
 	return netCost;
 }
 
+double Building::getMaterialCost() {
+	double mat = 0;
+	for (auto& it : neededMaterial) {
+		mat += it.first.getMaterialPrice() * it.second;
+	}
+	return mat;
+}
+
+double Building::getPrice() {
+	double net = netCost;
+	double mat = getMaterialCost();
+
+	return net + mat;
+}
+
 std::map<Material, int>& Building::getNeededMaterial()
 {
 	return neededMaterial;

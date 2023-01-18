@@ -6,6 +6,8 @@ class Building {
 public:
     char getLabel();
     double getNetCost();
+    double getMaterialCost();
+    double getPrice();
     std::map<Material, int>& getNeededMaterial();
     std::map<Material, int> neededMaterial;
 

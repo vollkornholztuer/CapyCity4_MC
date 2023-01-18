@@ -165,8 +165,8 @@ int CapycitySim::inputBuildingYCoordinate()
 bool CapycitySim::checkBuilding(int xCoordinate, int yCoordinate, int buildingLength, int buildingWidth)
 {
     bool alreadyBuilt = false;
-    for (int i = yCoordinate; i < buildingWidth + yCoordinate; i++) {
-        for (int j = xCoordinate; j < buildingLength + xCoordinate; j++) {
+    for (int i = xCoordinate; i < buildingWidth + xCoordinate; i++) {
+        for (int j = yCoordinate; j < buildingLength + yCoordinate; j++) {
             if (buildArea[i][j].getLabel() != 'E') {
                 alreadyBuilt = true;
             }
@@ -176,8 +176,9 @@ bool CapycitySim::checkBuilding(int xCoordinate, int yCoordinate, int buildingLe
 }
 
 void CapycitySim::setBuilding(Building* building, int xCoordinate, int yCoordinate, int buildingLength, int buildingWidth)
+
 {
-    for (int i = yCoordinate; i < buildingWidth + yCoordinate; i++) {
+    for (int i = xCoordinate; i < buildingWidth + xCoordinate; i++) {
         for (int j = yCoordinate; j < buildingLength + yCoordinate; j++) {
             buildArea[i][j] = *building;
         }
