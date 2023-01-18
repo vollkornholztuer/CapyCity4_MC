@@ -11,20 +11,13 @@ EmptySpace::EmptySpace() {
 	this->label = 'E';
 }
 
-//WindPlant::WindPlant() {
-//	neededMaterial = {
-//		{Wood(), 2},
-//		{Metal(), 1},
-//		{Plastic(), 4}
-//	};
-//}
-
 WindPlant::WindPlant() {
 	neededMaterial = std::map<Material, int>({
 		{Wood(), 2},
 		{Metal(), 1},
 		{Plastic(), 4}
 		});
+	this->label = 'W';
 }
 
 HydroPlant::HydroPlant() {
@@ -47,8 +40,7 @@ char Building::getLabel() {
 	return label;
 }
 
-double Building::getNetCost()
-{
+double Building::getNetCost() {
 	return netCost;
 }
 
@@ -60,14 +52,12 @@ double Building::getMaterialCost() {
 	return mat;
 }
 
-double Building::getPrice() {
-	double net = netCost;
-	double mat = getMaterialCost();
-
-	return net + mat;
+double Building::getBuildingPrice() {
+	return netCost + getMaterialCost();
 }
 
-std::map<Material, int>& Building::getNeededMaterial()
-{
+std::map<Material, int>& Building::getNeededMaterial() {
 	return neededMaterial;
 }
+
+// TODO: Leistung / Wattage

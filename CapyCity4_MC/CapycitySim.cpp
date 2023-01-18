@@ -204,11 +204,6 @@ void CapycitySim::showBuildArea()
     int countHydroPlant = 0;
     int countSolarPlant = 0;
 
-    int countWood = 0;
-    int countMetal = 0;
-    int countPlastic = 0;
-
-    /*Material** materials;*/ // evtl. nicht mehr gebraucht
     double totalCost = 0;
 
     for (int i = 0; i < length; i++) {
@@ -232,36 +227,26 @@ void CapycitySim::showBuildArea()
         }
         std::cout << "\n";
     }
-    // TODO: output prices
 
     // Berechnung Kosten
     HydroPlant hydroPlant;
     WindPlant windPlant;
     SolarPlant solarPlant;
-    std::map<Material, int>& hydroMaterials = HydroPlant().getNeededMaterial();
-    std::map<Material, int>& windMaterials = WindPlant().getNeededMaterial();
-    std::map<Material, int>& solarMaterials = SolarPlant().getNeededMaterial();
-    std::map<Material, int>::iterator it;
 
-    double hydroMaterialCost = 0;
-    for (auto& it : hydroPlant.neededMaterial) {
-        hydroMaterialCost += it.first.getMaterialPrice() * it.second;
-    }
+    double hydroMaterialCost = hydroPlant.getMaterialCost();
+    double hydroPlantCost = hydroMaterialCost + hydroPlant.getNetCost();
+    double hydroCost = hydroPlantCost * countHydroPlant;
 
-    double windMaterialCost = 0;
-    for (auto& it : hydroPlant.neededMaterial) {
-        windMaterialCost += it.first.getMaterialPrice() + it.second;
-    }
+    double windMaterialCost = windPlant.getMaterialCost();
+    double windPlantCost = windMaterialCost + windPlant.getNetCost();
+    double windCost = windPlantCost * countHydroPlant;
 
-    double solarMaterialCost = 0;
-    for (auto& it : hydroPlant.neededMaterial) {
-        solarMaterialCost += it.first.getMaterialPrice() * it.second;
-    }
+    double solarMaterialCost = solarPlant.getMaterialCost();
+    double solarPlantCost = solarMaterialCost + solarPlant.getNetCost();
+    double solarCost = solarPlantCost * countSolarPlant;
 
-    double hydroCost = countHydroPlant * (hydroMaterialCost + HydroPlant().getNetCost());
-    double windCost = countWindPlant * (windMaterialCost + WindPlant().getNetCost());
-    double solarCost = countSolarPlant * (solarMaterialCost + WindPlant().getNetCost());
-
+    totalCost = hydroCost + windCost + solarCost;
+    
     std::cout << "Es befinden sich " << countHydroPlant << " Wasserkraftwerke im Baugebiet\n";
     std::cout << "Die Materialkosten dafuer betragen: " << hydroMaterialCost * countHydroPlant << "\n";
     std::cout << "Die Gesamtkosten der Wasserkraftanlagen betragen: " << hydroCost << "\n\n";

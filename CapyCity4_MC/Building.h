@@ -7,7 +7,7 @@ public:
     char getLabel();
     double getNetCost();
     double getMaterialCost();
-    double getPrice();
+    double getBuildingPrice();
     std::map<Material, int>& getNeededMaterial();
     std::map<Material, int> neededMaterial;
 
