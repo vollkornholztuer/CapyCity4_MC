@@ -1,3 +1,4 @@
+#include "Blueprint.h"
 #include "CapycitySim.h"
 #include "Building.h"
 #include "Material.h"
@@ -7,7 +8,8 @@
 std::regex menuCheck("[1-4]");
 std::regex numberCheck("[[:digit:]]+");
 
-void CapycitySim::declareBuildingArea(int buildAreaWidth, int buildAreaLength) {
+void Blueprint::declareBuildingArea(int buildAreaWidth, int buildAreaLength)
+{
     buildArea = new Building * [buildAreaWidth];
     for (int x = 0; x < buildAreaWidth; x++) {
         buildArea[x] = new Building[buildAreaLength];
@@ -19,42 +21,7 @@ void CapycitySim::declareBuildingArea(int buildAreaWidth, int buildAreaLength) {
     length = buildAreaLength;
 }
 
-void CapycitySim::menu()
-{
-    std::string input;
-    std::cout << "*********** MENU ***********" << std::endl;
-    std::cout << "Gebaeude bauen (1)" << std::endl;
-    std::cout << "Gebaeude abreissen (2)" << std::endl;
-    std::cout << "Bauplan ausgeben (3)" << std::endl;
-    std::cout << "Programm beenden (4)" << std::endl;
-    std::cout << "Eingabe: ";
-    std::cin >> input;
-    std::cout << "****************************" << std::endl;
-    if (regex_match(input, menuCheck)) {
-        switch (stoi(input)) {
-        case 1:
-            build();
-            break;
-        case 2:
-            destroy();
-            break;
-        case 3:
-            showBuildArea();
-            break;
-        case 4:
-            exit(0);
-            running = false;
-            break;
-        default:
-            break;
-        }
-    }
-    else {
-        std::cout << "Ungueltige Eingabe\n";
-    }
-}
-
-void CapycitySim::build()
+void Blueprint::build()
 {
     Building* building = chooseBuildingType();
     int xCoordinate = inputBuildingXCoordinate();
@@ -70,7 +37,7 @@ void CapycitySim::build()
     }
 }
 
-Building* CapycitySim::chooseBuildingType()
+Building* Blueprint::chooseBuildingType()
 {
     std::string input;
 
@@ -101,7 +68,7 @@ Building* CapycitySim::chooseBuildingType()
     return nullptr;
 }
 
-int CapycitySim::inputBuildingWidth(int xCoordinate)
+int Blueprint::inputBuildingWidth(int xCoordinate)
 {
     std::string input;
     std::cout << "Gebaeudebreite eingeben: ";
@@ -116,7 +83,7 @@ int CapycitySim::inputBuildingWidth(int xCoordinate)
     }
 }
 
-int CapycitySim::inputBuildingLength(int yCoordinate)
+int Blueprint::inputBuildingLength(int yCoordinate)
 {
     std::string input;
     std::cout << "Gebaeudelaenge eingeben: ";
@@ -131,7 +98,7 @@ int CapycitySim::inputBuildingLength(int yCoordinate)
     }
 }
 
-int CapycitySim::inputBuildingXCoordinate()
+int Blueprint::inputBuildingXCoordinate()
 {
     std::string input;
     std::cout << "x-Koordinate fuer Gebaeude eingeben: ";
@@ -142,10 +109,11 @@ int CapycitySim::inputBuildingXCoordinate()
     }
     else {
         std::cout << "Eingabe ungueltig" << std::endl;
+        return inputBuildingXCoordinate();
     }
 }
 
-int CapycitySim::inputBuildingYCoordinate()
+int Blueprint::inputBuildingYCoordinate()
 {
     std::string input;
     std::cout << "y-Koordinate fuer Gebaeude eingeben: ";
@@ -160,7 +128,7 @@ int CapycitySim::inputBuildingYCoordinate()
     }
 }
 
-bool CapycitySim::checkBuilding(int xCoordinate, int yCoordinate, int buildingLength, int buildingWidth)
+bool Blueprint::checkBuilding(int xCoordinate, int yCoordinate, int buildingLength, int buildingWidth)
 {
     bool alreadyBuilt = false;
     for (int i = xCoordinate; i < buildingWidth + xCoordinate; i++) {
@@ -173,8 +141,7 @@ bool CapycitySim::checkBuilding(int xCoordinate, int yCoordinate, int buildingLe
     return alreadyBuilt;
 }
 
-void CapycitySim::setBuilding(Building* building, int xCoordinate, int yCoordinate, int buildingLength, int buildingWidth)
-
+void Blueprint::setBuilding(Building* building, int xCoordinate, int yCoordinate, int buildingLength, int buildingWidth)
 {
     for (int i = xCoordinate; i < buildingWidth + xCoordinate; i++) {
         for (int j = yCoordinate; j < buildingLength + yCoordinate; j++) {
@@ -183,7 +150,7 @@ void CapycitySim::setBuilding(Building* building, int xCoordinate, int yCoordina
     }
 }
 
-void CapycitySim::destroy()
+void Blueprint::destroy()
 {
     int xCoordinate = inputBuildingXCoordinate();
     int yCoordinate = inputBuildingYCoordinate();
@@ -196,7 +163,7 @@ void CapycitySim::destroy()
     }
 }
 
-void CapycitySim::showBuildArea()
+void Blueprint::showBuildArea()
 {
     int countWindPlant = 0;
     int countHydroPlant = 0;
@@ -246,7 +213,7 @@ void CapycitySim::showBuildArea()
 
     double totalCost = hydroCost + windCost + solarCost;
     double totalWattage = hydroWattage + windWattage + solarWattage;
-    
+
     std::cout << "Es befinden sich " << countHydroPlant << " Wasserkraftwerke im Baugebiet\n";
     std::cout << "Die Materialkosten dafuer betragen: " << hydroMaterialCost * countHydroPlant << "\n";
     std::cout << "Die Gesamtkosten der Wasserkraftanlagen betragen: " << hydroCost << "\n";

@@ -1,15 +1,13 @@
 #pragma once
 #include "Building.h"
 
-class CapycitySim
-{
+class Blueprint {
 public:
 	Building** buildArea;
 	int width;
 	int length;
 	bool running = true;
 
-	void menu();
 	void declareBuildingArea(int buildAreaWidth, int buildAreaLength);
 
 	void build();

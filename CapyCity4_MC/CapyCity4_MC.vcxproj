@@ -127,12 +127,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Blueprint.cpp" />
     <ClCompile Include="CapyCity4_MC.cpp" />
     <ClCompile Include="Building.cpp" />
     <ClCompile Include="CapycitySim.cpp" />
     <ClCompile Include="Material.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Blueprint.h" />
     <ClInclude Include="Building.h" />
     <ClInclude Include="CapyCity4_MC.h" />
     <ClInclude Include="CapycitySim.h" />
