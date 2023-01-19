@@ -204,8 +204,6 @@ void CapycitySim::showBuildArea()
     int countHydroPlant = 0;
     int countSolarPlant = 0;
 
-    double totalCost = 0;
-
     for (int i = 0; i < length; i++) {
         for (int j = 0; j < width; j++) {
             char type = buildArea[j][i].getLabel();
@@ -236,26 +234,37 @@ void CapycitySim::showBuildArea()
     double hydroMaterialCost = hydroPlant.getMaterialCost();
     double hydroPlantCost = hydroMaterialCost + hydroPlant.getNetCost();
     double hydroCost = hydroPlantCost * countHydroPlant;
+    double hydroWattage = countHydroPlant * hydroPlant.getWattage();
 
     double windMaterialCost = windPlant.getMaterialCost();
     double windPlantCost = windMaterialCost + windPlant.getNetCost();
-    double windCost = windPlantCost * countHydroPlant;
+    double windCost = windPlantCost * countWindPlant;
+    double windWattage = countWindPlant * windPlant.getWattage();
 
     double solarMaterialCost = solarPlant.getMaterialCost();
     double solarPlantCost = solarMaterialCost + solarPlant.getNetCost();
     double solarCost = solarPlantCost * countSolarPlant;
+    double solarWattage = countSolarPlant * solarPlant.getWattage();
 
-    totalCost = hydroCost + windCost + solarCost;
+    double totalCost = hydroCost + windCost + solarCost;
+    double totalWattage = hydroWattage + windWattage + solarWattage;
     
     std::cout << "Es befinden sich " << countHydroPlant << " Wasserkraftwerke im Baugebiet\n";
     std::cout << "Die Materialkosten dafuer betragen: " << hydroMaterialCost * countHydroPlant << "\n";
-    std::cout << "Die Gesamtkosten der Wasserkraftanlagen betragen: " << hydroCost << "\n\n";
+    std::cout << "Die Gesamtkosten der Wasserkraftanlagen betragen: " << hydroCost << "\n";
+    std::cout << "Die Wasserkraftanlagen erbringen einen Stromertrag von " << hydroWattage << " MW\n\n";
+
 
     std::cout << "Es befinden sich " << countWindPlant << " Windkraftwerke im Baugebiet\n";
     std::cout << "Die Materialkosten dafuer betragen: " << windMaterialCost * countWindPlant << "\n";
-    std::cout << "Die Gesamtkosten der Windkraftanlagen betragen: " << windCost << "\n\n";
+    std::cout << "Die Gesamtkosten der Windkraftanlagen betragen: " << windCost << "\n";
+    std::cout << "Die Windkraftanlagen erbringen einen Stromertrag von " << windWattage << " MW\n\n";
 
     std::cout << "Es befinden sich " << countSolarPlant << " Solarkraftwerke im Baugebiet\n";
     std::cout << "Die Materialkosten dafuer betragen: " << solarMaterialCost * countSolarPlant << "\n";
-    std::cout << "Die Gesamtkosten der Solarkraftanlagen betragen: " << solarCost << "\n\n";
+    std::cout << "Die Gesamtkosten der Solarkraftanlagen betragen: " << solarCost << "\n";
+    std::cout << "Die Solarkraftanlagen erbringen einen Stromertrag von " << solarWattage << " MW\n\n";
+
+    std::cout << "Die Gesamtkosten betragen " << totalCost << "\n";
+    std::cout << "Die Gesamtleistung der Kraftwerke beträgt " << totalWattage << " MW\n\n";
 }

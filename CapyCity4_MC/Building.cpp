@@ -18,6 +18,7 @@ WindPlant::WindPlant() {
 		{Plastic(), 4}
 		});
 	this->label = 'W';
+	this->wattageMW = 5.0;
 }
 
 HydroPlant::HydroPlant() {
@@ -26,6 +27,7 @@ HydroPlant::HydroPlant() {
 		{Metal(), 2}
 		});
 	this->label = 'H';
+	this->wattageMW = 1.8;
 }
 
 SolarPlant::SolarPlant() {
@@ -34,6 +36,7 @@ SolarPlant::SolarPlant() {
 		{Metal(), 5}
 		});
 	this->label = 'S';
+	this->wattageMW = 2.5;
 }
 
 char Building::getLabel() {
@@ -61,3 +64,6 @@ std::map<Material, int>& Building::getNeededMaterial() {
 }
 
 // TODO: Leistung / Wattage
+double Building::getWattage() {
+	return wattageMW;
+}

@@ -8,10 +8,12 @@ public:
     double getNetCost();
     double getMaterialCost();
     double getBuildingPrice();
+    double getWattage();
     std::map<Material, int>& getNeededMaterial();
     std::map<Material, int> neededMaterial;
 
 protected:
+    double wattageMW; // Leistung
     char label;
     double netCost = 10000;
 };
