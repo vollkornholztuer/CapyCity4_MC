@@ -2,23 +2,18 @@
 #include "CapycitySim.h"
 #include "Building.h"
 #include "Material.h"
+#include "CapyCity4_MC.h"
 #include <iostream>
-#include <regex>
 
-std::regex menuCheck("[1-4]");
-std::regex numberCheck("[[:digit:]]+");
-
-void Blueprint::declareBuildingArea(int buildAreaWidth, int buildAreaLength)
+void Blueprint::declareBuildingArea()
 {
-    buildArea = new Building * [buildAreaWidth];
-    for (int x = 0; x < buildAreaWidth; x++) {
-        buildArea[x] = new Building[buildAreaLength];
-        for (int y = 0; y < buildAreaLength; y++) {
+    buildArea = new Building * [width];
+    for (int x = 0; x < width; x++) {
+        buildArea[x] = new Building[length];
+        for (int y = 0; y < length; y++) {
             buildArea[x][y] = EmptySpace::EmptySpace();
         }
     }
-    width = buildAreaWidth;
-    length = buildAreaLength;
 }
 
 void Blueprint::build()
@@ -34,6 +29,7 @@ void Blueprint::build()
     }
     else {
         setBuilding(building, xCoordinate, yCoordinate, buildingLength, buildingWidth);
+        setKennzahl();
     }
 }
 
@@ -131,9 +127,16 @@ int Blueprint::inputBuildingYCoordinate()
 bool Blueprint::checkBuilding(int xCoordinate, int yCoordinate, int buildingLength, int buildingWidth)
 {
     bool alreadyBuilt = false;
-    for (int i = xCoordinate; i < buildingWidth + xCoordinate; i++) {
+    /*for (int i = xCoordinate; i < buildingWidth + xCoordinate; i++) {
         for (int j = yCoordinate; j < buildingLength + yCoordinate; j++) {
-            if (buildArea[i][j].getLabel() != 'E') {
+            if (buildArea[j][i].getLabel() != 'E') {
+                alreadyBuilt = true;
+            }
+        }
+    }*/
+    for (int i = yCoordinate; i < buildingLength + yCoordinate; i++) {
+        for (int j = xCoordinate; j < buildingWidth + xCoordinate; j++) {
+            if (buildArea[j][i].getLabel() != 'E') {
                 alreadyBuilt = true;
             }
         }
@@ -143,9 +146,15 @@ bool Blueprint::checkBuilding(int xCoordinate, int yCoordinate, int buildingLeng
 
 void Blueprint::setBuilding(Building* building, int xCoordinate, int yCoordinate, int buildingLength, int buildingWidth)
 {
-    for (int i = xCoordinate; i < buildingWidth + xCoordinate; i++) {
+    /*for (int i = xCoordinate; i < buildingWidth + xCoordinate; i++) {
         for (int j = yCoordinate; j < buildingLength + yCoordinate; j++) {
             buildArea[i][j] = *building;
+        }
+    }*/
+
+    for (int i = yCoordinate; i < buildingLength + yCoordinate; i++) {
+        for (int j = xCoordinate; j < buildingWidth + xCoordinate; j++) {
+            buildArea[j][i] = *building;
         }
     }
 }
@@ -159,6 +168,7 @@ void Blueprint::destroy()
     }
     else {
         buildArea[xCoordinate][yCoordinate] = EmptySpace();
+        setKennzahl();
         std::cout << "Gebaeude an den Koordinaten x=" << xCoordinate << " y=" << yCoordinate << " wurde abgerissen.\n\n";
     }
 }
@@ -219,7 +229,6 @@ void Blueprint::showBuildArea()
     std::cout << "Die Gesamtkosten der Wasserkraftanlagen betragen: " << hydroCost << "\n";
     std::cout << "Die Wasserkraftanlagen erbringen einen Stromertrag von " << hydroWattage << " MW\n\n";
 
-
     std::cout << "Es befinden sich " << countWindPlant << " Windkraftwerke im Baugebiet\n";
     std::cout << "Die Materialkosten dafuer betragen: " << windMaterialCost * countWindPlant << "\n";
     std::cout << "Die Gesamtkosten der Windkraftanlagen betragen: " << windCost << "\n";
@@ -232,4 +241,75 @@ void Blueprint::showBuildArea()
 
     std::cout << "Die Gesamtkosten betragen " << totalCost << "\n";
     std::cout << "Die Gesamtleistung der Kraftwerke beträgt " << totalWattage << " MW\n\n";
+}
+
+std::string Blueprint::toString()
+{
+    return ". Bauplan";
+}
+
+void Blueprint::setKennzahl()
+{
+    int countWindPlant = 0;
+    int countHydroPlant = 0;
+    int countSolarPlant = 0;
+
+    for (int i = 0; i < length; i++) {
+        for (int j = 0; j < width; j++) {
+            char type = buildArea[j][i].getLabel();
+            if (type == 'H') { // HydroPlant
+                countHydroPlant += 1;
+            }
+            else if (type == 'W') { // WindPlant
+                countWindPlant += 1;
+            }
+            else if (type == 'S') { // SolarPlant
+                countSolarPlant += 1;
+            }
+        }
+        std::cout << "\n";
+    }
+
+    // Berechnung Kosten
+    HydroPlant hydroPlant;
+    WindPlant windPlant;
+    SolarPlant solarPlant;
+
+    double hydroMaterialCost = hydroPlant.getMaterialCost();
+    double hydroPlantCost = hydroMaterialCost + hydroPlant.getNetCost();
+    double hydroCost = hydroPlantCost * countHydroPlant;
+    double hydroWattage = countHydroPlant * hydroPlant.getWattage();
+
+    double windMaterialCost = windPlant.getMaterialCost();
+    double windPlantCost = windMaterialCost + windPlant.getNetCost();
+    double windCost = windPlantCost * countWindPlant;
+    double windWattage = countWindPlant * windPlant.getWattage();
+
+    double solarMaterialCost = solarPlant.getMaterialCost();
+    double solarPlantCost = solarMaterialCost + solarPlant.getNetCost();
+    double solarCost = solarPlantCost * countSolarPlant;
+    double solarWattage = countSolarPlant * solarPlant.getWattage();
+
+    double totalCost = hydroCost + windCost + solarCost;
+    double totalWattage = hydroWattage + windWattage + solarWattage;
+    int totalPowerplant = countHydroPlant + countWindPlant + countSolarPlant;
+
+    // Berechnung Kennzahl
+    kennZahl = (totalWattage) / totalCost * totalPowerplant;
+}
+
+double Blueprint::getKennzahl() {
+    return kennZahl;
+}
+
+bool Blueprint::operator()(Building** a, Building** b)
+{
+    for (int i = 0; i < length; i++) {
+        for (int j = 0; j < width; j++) {
+            if (a[j][i].getLabel() != b[j][i].getLabel()) {
+                return false;
+            }
+        }
+    }
+    return true;
 }

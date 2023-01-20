@@ -6,15 +6,17 @@
 #include "CapycitySim.h"
 #include "Building.h"
 #include "CapyCity4_MC.h"
+#include "Blueprint.h"
+
 using namespace std;
 bool running = true;
+std::regex menuCheck("[1-5]");
+std::regex numberCheck("[[:digit:]]+");
+int width = 0;
+int length = 0;
 
 int main(int argc, char** argv)
 {
-    CapycitySim s1;
-    int buildAreaWidth;
-    int buildAreaLength;
-
     if (argc != 3) {
         cout << "Verwendung: \n";
         cout << "CapyCity_MC <width> <height>\n";
@@ -22,8 +24,8 @@ int main(int argc, char** argv)
     }
 
     try {
-        buildAreaWidth = stoi(argv[1]);
-        buildAreaLength = stoi(argv[2]);
+        width = stoi(argv[1]);
+        length = stoi(argv[2]);
     }
     catch (invalid_argument const& ex) {
         ex;
@@ -36,33 +38,9 @@ int main(int argc, char** argv)
         return 3;
     }
 
-    s1.declareBuildingArea(buildAreaWidth, buildAreaLength);
-
-    /*buildArea = new Building * [s1.width];
-    for (int x = 0; x < s1.width; x++) {
-        buildArea[x] = new Building[s1.length];
-        for (int y = 0; y < s1.length; y++) {
-            buildArea[x][y] = EmptySpace::EmptySpace();
-        }
-    }*/
-
+    CapycitySim menuCapy;
 
     while (running) {
-        s1.menu();
+        menuCapy.menu();
     }
-
-    /*for (int x = 0; x < s1.width; x++) {
-        delete[] buildArea[x];
-    }
-    delete[] buildArea;*/
 }
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file

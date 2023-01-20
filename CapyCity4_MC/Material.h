@@ -34,5 +34,3 @@ public:
 		materialLabel = 'P';
 	}
 };
-
-#pragma once

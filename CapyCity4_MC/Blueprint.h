@@ -1,14 +1,17 @@
 #pragma once
+#include <string>
 #include "Building.h"
 
 class Blueprint {
 public:
+	Blueprint() {
+		declareBuildingArea();
+	}
 	Building** buildArea;
-	int width;
-	int length;
 	bool running = true;
+	double kennZahl = 0;
 
-	void declareBuildingArea(int buildAreaWidth, int buildAreaLength);
+	void declareBuildingArea();
 
 	void build();
 	Building* chooseBuildingType();
@@ -21,4 +24,9 @@ public:
 
 	void destroy();
 	void showBuildArea();
+	std::string toString();
+	void setKennzahl();
+	double getKennzahl();
+
+	bool operator()(Building** a, Building** b);
 };
