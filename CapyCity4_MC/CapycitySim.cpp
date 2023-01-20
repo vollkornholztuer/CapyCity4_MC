@@ -7,6 +7,8 @@
 
 std::vector<Blueprint> savedBlueprints;
 
+// Aktueller plan, -1 weil noch kein Plan erstellt
+// Variable dient dann als Index
 int currentPlan = -1;
 
 void CapycitySim::menu()
@@ -90,26 +92,29 @@ void CapycitySim::planMenu() {
         else {
             showBlueprints();
         }
-        
+        break;
+
     case 2: // Bauplan erstellen
-        if (savedBlueprints.size() > 0) {
+            // Iteration durch Blueprint-vektor
             for (int i = 0; i < savedBlueprints.size(); i++) {
-                bool identic = Blueprint().operator()(savedBlueprints.at(i).buildArea, savedBlueprints.at(savedBlueprints.size() - 1).buildArea);
-                if (identic) {
+
+                // Wenn aktueller Bauplan = index ist --> break (um Vergleich mit sich selbst zu vermeiden)
+                if (i == currentPlan) {
+                    break;
+                }
+                // Vergleich ob aktueller Bauplan identisch mit Bauplan am index vom Vektor ist
+                if (Blueprint().operator()(savedBlueprints.at(currentPlan).buildArea, savedBlueprints.at(i).buildArea) == true) {
                     std::cout << "Dein aktueller Bauplan ist identisch mit einem vorherigen Bauplan\n";
                     std::cout << "Der Bauplan wird jetzt geloescht\n";
                     savedBlueprints.pop_back();
                     currentPlan -= 1;
                     break;
-                }
+                } 
             }
-        }
-        else {
-            currentPlan += 1;
-            savedBlueprints.push_back(Blueprint());
-            std::cout << "Ein neuer Bauplan wurde erstellt\n";
-            break;
-        }
+        currentPlan += 1;
+        savedBlueprints.push_back(Blueprint());
+        std::cout << "Ein neuer Bauplan wurde erstellt\n";
+        break;
 
     case 3: // Zurück zum Hauptmenü
         menu();
@@ -120,10 +125,12 @@ void CapycitySim::planMenu() {
 }
 
 void CapycitySim::showBlueprints() {
+    // Sortieren der Baupläne nach Kennzahlen
     sort(savedBlueprints.begin(), savedBlueprints.end(), [](Blueprint a, Blueprint b) {
        return a.getKennzahl() > b.getKennzahl();
     });
 
+    // Ausgabe der Baupläne in sortierter Reihenfolge mit Kennzahl
     for (int i = 0; i < savedBlueprints.size(); i++) {
         std::cout << i+1 << savedBlueprints[i].toString() << " | ";
         std::cout << "Kennzahl: " << savedBlueprints[i].getKennzahl() << "\n";

@@ -7,6 +7,7 @@
 
 void Blueprint::declareBuildingArea()
 {
+    // Baugebiet mit leeren-Elementen versehen
     buildArea = new Building * [width];
     for (int x = 0; x < width; x++) {
         buildArea[x] = new Building[length];
@@ -69,7 +70,8 @@ int Blueprint::inputBuildingWidth(int xCoordinate)
     std::string input;
     std::cout << "Gebaeudebreite eingeben: ";
     std::cin >> input;
-
+    
+    // Prüfen ob Gebäude nicht zu breit für Baugebiet ist
     if (regex_match(input, numberCheck) && stoi(input) > 0 && (xCoordinate + stoi(input) - 1) < width) {
         return stoi(input);
     }
@@ -85,6 +87,7 @@ int Blueprint::inputBuildingLength(int yCoordinate)
     std::cout << "Gebaeudelaenge eingeben: ";
     std::cin >> input;
 
+    // Prüfen ob Gebäude nicht zu lang für Baugebiet ist
     if (regex_match(input, numberCheck) && stoi(input) > 0 && (yCoordinate + stoi(input) - 1) < length) {
         return stoi(input);
     }
@@ -100,6 +103,7 @@ int Blueprint::inputBuildingXCoordinate()
     std::cout << "x-Koordinate fuer Gebaeude eingeben: ";
     std::cin >> input;
 
+    // Prüfen ob Eingabe im Koordinatensystem vorhanden ist
     if (regex_match(input, numberCheck) && (stoi(input) >= 0 && stoi(input) < width)) {
         return stoi(input);
     }
@@ -115,6 +119,7 @@ int Blueprint::inputBuildingYCoordinate()
     std::cout << "y-Koordinate fuer Gebaeude eingeben: ";
     std::cin >> input;
 
+    // Prüfen ob Eingabe im Koordinatensystem vorhanden ist
     if (regex_match(input, numberCheck) && (stoi(input) >= 0 && stoi(input) < length)) {
         return stoi(input);
     }
@@ -127,13 +132,7 @@ int Blueprint::inputBuildingYCoordinate()
 bool Blueprint::checkBuilding(int xCoordinate, int yCoordinate, int buildingLength, int buildingWidth)
 {
     bool alreadyBuilt = false;
-    /*for (int i = xCoordinate; i < buildingWidth + xCoordinate; i++) {
-        for (int j = yCoordinate; j < buildingLength + yCoordinate; j++) {
-            if (buildArea[j][i].getLabel() != 'E') {
-                alreadyBuilt = true;
-            }
-        }
-    }*/
+    // Prüfen ob Baugebiet schon bebaut ist
     for (int i = yCoordinate; i < buildingLength + yCoordinate; i++) {
         for (int j = xCoordinate; j < buildingWidth + xCoordinate; j++) {
             if (buildArea[j][i].getLabel() != 'E') {
@@ -146,12 +145,7 @@ bool Blueprint::checkBuilding(int xCoordinate, int yCoordinate, int buildingLeng
 
 void Blueprint::setBuilding(Building* building, int xCoordinate, int yCoordinate, int buildingLength, int buildingWidth)
 {
-    /*for (int i = xCoordinate; i < buildingWidth + xCoordinate; i++) {
-        for (int j = yCoordinate; j < buildingLength + yCoordinate; j++) {
-            buildArea[i][j] = *building;
-        }
-    }*/
-
+    // Gebäude setzen
     for (int i = yCoordinate; i < buildingLength + yCoordinate; i++) {
         for (int j = xCoordinate; j < buildingWidth + xCoordinate; j++) {
             buildArea[j][i] = *building;
@@ -163,10 +157,13 @@ void Blueprint::destroy()
 {
     int xCoordinate = inputBuildingXCoordinate();
     int yCoordinate = inputBuildingYCoordinate();
+
+    // Prüfen ob Baugebiet leer ist
     if (buildArea[xCoordinate][yCoordinate].getLabel() == 'E') {
         std::cout << "An den Koordinaten x=" << xCoordinate << ", y=" << yCoordinate << " ist nichts gebaut.\n";
     }
     else {
+        // Baugebiet auf leer setzen
         buildArea[xCoordinate][yCoordinate] = EmptySpace();
         setKennzahl();
         std::cout << "Gebaeude an den Koordinaten x=" << xCoordinate << " y=" << yCoordinate << " wurde abgerissen.\n\n";
@@ -179,6 +176,7 @@ void Blueprint::showBuildArea()
     int countHydroPlant = 0;
     int countSolarPlant = 0;
 
+    // Bauplan ausgeben
     for (int i = 0; i < length; i++) {
         for (int j = 0; j < width; j++) {
             char type = buildArea[j][i].getLabel();
@@ -224,6 +222,7 @@ void Blueprint::showBuildArea()
     double totalCost = hydroCost + windCost + solarCost;
     double totalWattage = hydroWattage + windWattage + solarWattage;
 
+    // Ausgabe der Kosten und Stromerzeugung
     std::cout << "Es befinden sich " << countHydroPlant << " Wasserkraftwerke im Baugebiet\n";
     std::cout << "Die Materialkosten dafuer betragen: " << hydroMaterialCost * countHydroPlant << "\n";
     std::cout << "Die Gesamtkosten der Wasserkraftanlagen betragen: " << hydroCost << "\n";
@@ -243,11 +242,13 @@ void Blueprint::showBuildArea()
     std::cout << "Die Gesamtleistung der Kraftwerke beträgt " << totalWattage << " MW\n\n";
 }
 
+// Ausgabe des Bauplans im Baumenü - 'planMenu()'
 std::string Blueprint::toString()
 {
     return ". Bauplan";
 }
 
+// Berechnung Kennzahl
 void Blueprint::setKennzahl()
 {
     int countWindPlant = 0;
@@ -302,14 +303,15 @@ double Blueprint::getKennzahl() {
     return kennZahl;
 }
 
+// Vergleich ob zwei Baupläne identisch sind
 bool Blueprint::operator()(Building** a, Building** b)
 {
     for (int i = 0; i < length; i++) {
         for (int j = 0; j < width; j++) {
-            if (a[j][i].getLabel() != b[j][i].getLabel()) {
-                return false;
+            if (a[j][i].getLabel() == b[j][i].getLabel()) {
+                return true;
             }
         }
     }
-    return true;
+    return false;
 }

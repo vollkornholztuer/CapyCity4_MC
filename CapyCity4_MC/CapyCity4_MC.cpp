@@ -34,7 +34,7 @@ int main(int argc, char** argv)
     }
     catch (out_of_range const& ex) {
         ex;
-        cout << "Die Eingabe besteht NUR aus zwei ganzen Zahlen.";
+        cout << "Die Eingabe besteht nur aus zwei ganzen Zahlen.";
         return 3;
     }
 
